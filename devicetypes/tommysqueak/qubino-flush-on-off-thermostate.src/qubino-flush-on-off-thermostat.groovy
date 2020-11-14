@@ -312,7 +312,7 @@ def zwaveEvent(physicalgraph.zwave.commands.sensormultilevelv5.SensorMultilevelR
 {
   // 1 = temperature
   if(cmd.sensorType == 1){
-    def temperatureEvent = createEvent(name: "temperature", value: cmd.scaledSensorValue, unit: cmd.scale == 1 ? "°F" : "°C")
+    def temperatureEvent = createEvent(name: "temperature", value: cmd.scaledSensorValue, unit: cmd.scale == 1 ? "F" : "C")
     def combinedEvent = createCombinedStateEvent(device.currentValue("thermostatMode"), device.currentValue("thermostatOperatingState"), cmd.scaledSensorValue.intValue())
     [temperatureEvent, combinedEvent]
   }
@@ -397,7 +397,7 @@ def temperatureDown() {
 
 def setHeatingSetpoint(desiredTemperature){
   log.debug "setting heatpoint $desiredTemperature"
-  sendEvent(name: "heatingSetpoint", value: desiredTemperature, unit: "°C")
+  sendEvent(name: "heatingSetpoint", value: desiredTemperature, unit: getTemperatureScale())
   zwave.thermostatSetpointV2.thermostatSetpointSet(precision: 1, scale: 0, scaledValue: desiredTemperature, setpointType: 1, size: 2).format()
 }
 
