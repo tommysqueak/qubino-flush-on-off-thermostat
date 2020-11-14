@@ -302,7 +302,6 @@ def raiseThermostatEvents(switchValue)
   //  Store switch on/off. And also the thermostate mode, either heating (switch on) or idle (switch off)
   def operatingState = switchValue ? "heating" : "idle"
   def events = []
-  events << createEvent(name: "switch", value: switchValue ? "on" : "off", displayed: false)
   events << createEvent(name: "thermostatOperatingState", value: operatingState)
   events << createCombinedStateEvent(device.currentValue("thermostatMode"), operatingState, currentInt("temperature"))
   events
