@@ -20,9 +20,7 @@
  *
  */
 metadata {
-  definition (name: "Qubino flush on/off thermostat", namespace: "tommysqueak", author: "Tom Philip") {
-    capability "Actuator"
-    capability "Sensor"
+  definition (name: "Qubino flush on/off thermostat v5", namespace: "tommysqueak", author: "Tom Philip", ocfDeviceType: "oic.d.thermostat", mnmn: "SmartThingsCommunity", vid: "03a35352-2234-3961-ba2b-1e7817cd00db") {
     capability "Switch"
     capability "Temperature Measurement"
     capability "Power Meter"
@@ -371,7 +369,7 @@ def zwaveEvent(physicalgraph.zwave.Command cmd) {
 
 def on() {
   log.debug("on")
-  setThermostatMode("heat")
+  heat()
 }
 
 def off() {
@@ -407,7 +405,7 @@ def setHeatingSetpoint(desiredTemperature){
 //  Thermostat Mode  //
 //  ///////////////////
 def heat() {
-  on()
+  setThermostatMode("heat")
 }
 
 def emergencyHeat() {
@@ -425,22 +423,20 @@ def auto() {
 }
 
 def setThermostatMode(mode) {
-  // thermostatMode - "emergency heat" "heat" "cool" "off" "auto"
-  sendEvent(name: "thermostatMode", value: mode)
+    // thermostatMode - "emergency heat" "heat" "auto" "eco" "cool" "off" "rush hour"
+  def supportedMode = ["emergency heat", "heat", "auto", "eco"].contains(mode) ? "heat" : "off"
+
+  sendEvent(name: "thermostatMode", value: supportedMode)
   sendEvent(createCombinedStateEvent(mode, device.currentValue("thermostatOperatingState"), currentInt("temperature")))
 
   def cmds = []
 
-  switch(mode){
+  switch(supportedMode){
 		case "off":
 			cmds << zwave.thermostatModeV2.thermostatModeSet(mode: 0).format()
 			break;
 		case "heat":
-    case "emergency heat":
 			cmds << zwave.thermostatModeV2.thermostatModeSet(mode: 1).format()
-			break;
-		case "auto":
-			cmds << zwave.thermostatModeV2.thermostatModeSet(mode: 3).format()
 			break;
 	}
 
@@ -537,6 +533,9 @@ def configure() {
     //  32536 = 0°C - default.
     temperatureOffsetConfig = 32536
   }
+
+  sendEvent(name: "supportedThermostatModes", value: ["heat", "off"], displayed: false)
+  sendEvent(name: "supportedThermostatFanModes", value: ["auto"], displayed: false)
 
   delayBetween([
     //  Switch type: 0 - mono-stable (push button), 1 - bi-stable
