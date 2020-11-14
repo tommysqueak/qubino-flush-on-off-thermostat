@@ -20,7 +20,7 @@
  *
  */
 metadata {
-  definition (name: "Qubino flush on/off thermostat v5", namespace: "tommysqueak", author: "Tom Philip", ocfDeviceType: "oic.d.thermostat", mnmn: "SmartThingsCommunity", vid: "03a35352-2234-3961-ba2b-1e7817cd00db") {
+  definition (name: "Qubino flush on/off thermostat v6", namespace: "tommysqueak", author: "Tom Philip", ocfDeviceType: "oic.d.thermostat", mnmn: "SmartThingsCommunity", vid: "778fbf4b-38e8-3d77-a902-aef87e285c12") {
     capability "Switch"
     capability "Temperature Measurement"
     capability "Power Meter"
