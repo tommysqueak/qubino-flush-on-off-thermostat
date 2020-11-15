@@ -20,7 +20,7 @@
  *
  */
 metadata {
-  definition (name: "Qubino flush on/off thermostat v6", namespace: "tommysqueak", author: "Tom Philip", ocfDeviceType: "oic.d.thermostat", mnmn: "SmartThingsCommunity", vid: "778fbf4b-38e8-3d77-a902-aef87e285c12") {
+  definition (name: "Qubino flush on/off thermostat v7", namespace: "tommysqueak", author: "Tom Philip", ocfDeviceType: "oic.d.thermostat", mnmn: "SmartThingsCommunity", vid: "778fbf4b-38e8-3d77-a902-aef87e285c12") {
     capability "Switch"
     capability "Temperature Measurement"
     capability "Power Meter"
@@ -282,6 +282,7 @@ def zwaveEvent(physicalgraph.zwave.commands.thermostatmodev2.ThermostatModeRepor
   def operatingMode = cmd.mode ? "heat" : "off"
 
   def events = []
+  events << createEvent(name: "switch", value: operatingMode == "heat" ? "on" : "off", displayed: false)
   events << createEvent(name: "thermostatMode", value: operatingMode)
   events << createEvent(createCombinedStateEvent(operatingMode, device.currentValue("thermostatOperatingState"), currentInt("temperature")))
   events
@@ -426,6 +427,7 @@ def setThermostatMode(mode) {
   def supportedMode = ["emergency heat", "heat", "auto", "eco"].contains(mode) ? "heat" : "off"
 
   sendEvent(name: "thermostatMode", value: supportedMode)
+  sendEvent(name: "switch", value: supportedMode == "heat" ? "on" : "off", displayed: false)
   sendEvent(createCombinedStateEvent(mode, device.currentValue("thermostatOperatingState"), currentInt("temperature")))
 
   def cmds = []
