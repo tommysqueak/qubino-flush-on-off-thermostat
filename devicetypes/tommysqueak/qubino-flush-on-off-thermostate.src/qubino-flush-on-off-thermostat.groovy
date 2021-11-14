@@ -20,9 +20,7 @@
  *
  */
 metadata {
-  definition (name: "Qubino flush on/off thermostat", namespace: "tommysqueak", author: "Tom Philip") {
-    capability "Actuator"
-    capability "Sensor"
+  definition (name: "Qubino flush on/off thermostat v7", namespace: "tommysqueak", author: "Tom Philip", ocfDeviceType: "oic.d.thermostat", mnmn: "SmartThingsCommunity", vid: "778fbf4b-38e8-3d77-a902-aef87e285c12") {
     capability "Switch"
     capability "Temperature Measurement"
     capability "Power Meter"
@@ -284,6 +282,7 @@ def zwaveEvent(physicalgraph.zwave.commands.thermostatmodev2.ThermostatModeRepor
   def operatingMode = cmd.mode ? "heat" : "off"
 
   def events = []
+  events << createEvent(name: "switch", value: operatingMode == "heat" ? "on" : "off", displayed: false)
   events << createEvent(name: "thermostatMode", value: operatingMode)
   events << createEvent(createCombinedStateEvent(operatingMode, device.currentValue("thermostatOperatingState"), currentInt("temperature")))
   events
@@ -304,7 +303,6 @@ def raiseThermostatEvents(switchValue)
   //  Store switch on/off. And also the thermostate mode, either heating (switch on) or idle (switch off)
   def operatingState = switchValue ? "heating" : "idle"
   def events = []
-  events << createEvent(name: "switch", value: switchValue ? "on" : "off", displayed: false)
   events << createEvent(name: "thermostatOperatingState", value: operatingState)
   events << createCombinedStateEvent(device.currentValue("thermostatMode"), operatingState, currentInt("temperature"))
   events
@@ -314,7 +312,7 @@ def zwaveEvent(physicalgraph.zwave.commands.sensormultilevelv5.SensorMultilevelR
 {
   // 1 = temperature
   if(cmd.sensorType == 1){
-    def temperatureEvent = createEvent(name: "temperature", value: cmd.scaledSensorValue, unit: cmd.scale == 1 ? "°F" : "°C")
+    def temperatureEvent = createEvent(name: "temperature", value: cmd.scaledSensorValue, unit: cmd.scale == 1 ? "F" : "C")
     def combinedEvent = createCombinedStateEvent(device.currentValue("thermostatMode"), device.currentValue("thermostatOperatingState"), cmd.scaledSensorValue.intValue())
     [temperatureEvent, combinedEvent]
   }
@@ -371,7 +369,7 @@ def zwaveEvent(physicalgraph.zwave.Command cmd) {
 
 def on() {
   log.debug("on")
-  setThermostatMode("heat")
+  heat()
 }
 
 def off() {
@@ -399,7 +397,7 @@ def temperatureDown() {
 
 def setHeatingSetpoint(desiredTemperature){
   log.debug "setting heatpoint $desiredTemperature"
-  sendEvent(name: "heatingSetpoint", value: desiredTemperature, unit: "°C")
+  sendEvent(name: "heatingSetpoint", value: desiredTemperature, unit: getTemperatureScale())
   zwave.thermostatSetpointV2.thermostatSetpointSet(precision: 1, scale: 0, scaledValue: desiredTemperature, setpointType: 1, size: 2).format()
 }
 
@@ -407,7 +405,7 @@ def setHeatingSetpoint(desiredTemperature){
 //  Thermostat Mode  //
 //  ///////////////////
 def heat() {
-  on()
+  setThermostatMode("heat")
 }
 
 def emergencyHeat() {
@@ -425,22 +423,21 @@ def auto() {
 }
 
 def setThermostatMode(mode) {
-  // thermostatMode - "emergency heat" "heat" "cool" "off" "auto"
-  sendEvent(name: "thermostatMode", value: mode)
+    // thermostatMode - "emergency heat" "heat" "auto" "eco" "cool" "off" "rush hour"
+  def supportedMode = ["emergency heat", "heat", "auto", "eco"].contains(mode) ? "heat" : "off"
+
+  sendEvent(name: "thermostatMode", value: supportedMode)
+  sendEvent(name: "switch", value: supportedMode == "heat" ? "on" : "off", displayed: false)
   sendEvent(createCombinedStateEvent(mode, device.currentValue("thermostatOperatingState"), currentInt("temperature")))
 
   def cmds = []
 
-  switch(mode){
+  switch(supportedMode){
 		case "off":
 			cmds << zwave.thermostatModeV2.thermostatModeSet(mode: 0).format()
 			break;
 		case "heat":
-    case "emergency heat":
 			cmds << zwave.thermostatModeV2.thermostatModeSet(mode: 1).format()
-			break;
-		case "auto":
-			cmds << zwave.thermostatModeV2.thermostatModeSet(mode: 3).format()
 			break;
 	}
 
@@ -537,6 +534,9 @@ def configure() {
     //  32536 = 0°C - default.
     temperatureOffsetConfig = 32536
   }
+
+  sendEvent(name: "supportedThermostatModes", value: ["heat", "off"], displayed: false)
+  sendEvent(name: "supportedThermostatFanModes", value: ["auto"], displayed: false)
 
   delayBetween([
     //  Switch type: 0 - mono-stable (push button), 1 - bi-stable
