@@ -5,14 +5,6 @@
     "states": [
       {
         "component": "main",
-        "capability": "temperatureMeasurement",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
         "capability": "switch",
         "version": 1,
         "values": [],
@@ -21,63 +13,7 @@
       },
       {
         "component": "main",
-        "capability": "configuration",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "refresh",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "thermostat",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "energyMeter",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "powerMeter",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "thermostatMode",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "thermostatOperatingState",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "thermostatHeatingSetpoint",
+        "capability": "temperatureMeasurement",
         "version": 1,
         "values": [],
         "patch": [],
@@ -87,79 +23,7 @@
     "actions": [
       {
         "component": "main",
-        "capability": "temperatureMeasurement",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
         "capability": "switch",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "configuration",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "refresh",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "thermostat",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "energyMeter",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "powerMeter",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "thermostatMode",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "thermostatOperatingState",
-        "version": 1,
-        "values": [],
-        "patch": [],
-        "visibleCondition": null
-      },
-      {
-        "component": "main",
-        "capability": "thermostatHeatingSetpoint",
         "version": 1,
         "values": [],
         "patch": [],
@@ -368,5 +232,6 @@
     ]
   },
   "vid": "03a35352-2234-3961-ba2b-1e7817cd00db",
-  "mnmn": "SmartThingsCommunity"
+  "mnmn": "SmartThingsCommunity",
+  "version": "0.0.13"
 }
