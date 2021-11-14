@@ -1,0 +1,47 @@
+{
+  "dashboard": {
+    "states": [
+      {
+        "label": "{{switch.value}}",
+        "alternatives": [
+            {
+                "key": "on",
+                "value": "Onn",
+                "type": "active"
+            },
+            {
+                "key": "off",
+                "value": "Offf",
+                "type": "inactive"
+            }
+        ],
+        "group": "main"
+      },
+      {
+        "label": "{{temperature.value}} {{temperature.unit}}",
+        "alternatives": [
+            {
+                "key": "C",
+                "value": "°C",
+                "type": "active"
+            },
+            {
+                "key": "K",
+                "value": "°K",
+                "type": "active"
+            },
+            {
+                "key": "F",
+                "value": "°F",
+                "type": "active"
+            }
+        ],
+        "group": "main"
+      }
+    ],
+    "actions": [],
+    "basicPlus": []
+  },
+  "id": "brookfuture40348.combinedmodetemperature",
+  "version": 1
+}
